@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>        
+    <head>C'est GENIAL!</head>    
+    <body>
+        <script src="/public/primus.js"></script>
+        <script>
+            var primus = Primus.connect('http://localhost:3000');
+            primus.on('open', function() {
+                primus.write('ping');
+                primus.on('data', function(data) {
+                    console.log(data);
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,34 @@
+{
+  "name": "nodeChatsServer",
+  "version": "0.0.0",
+  "description": "Simple chat server supporting CORS and that will support polymer clients",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vgheri/nodeChatsServer.git"
+  },
+  "keywords": [
+    "Nodejs",
+    "chat"
+  ],
+  "author": "Valerio Gheri",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vgheri/nodeChatsServer/issues"
+  },
+  "homepage": "https://github.com/vgheri/nodeChatsServer",
+  "devDependencies": {
+    "grunt": "^0.4.4",
+    "grunt-contrib-jshint": "^0.10.0"
+  },
+  "dependencies": {
+    "express": "^3.5.1",
+    "primus": "^2.1.2",
+    "winston": "^0.7.3",
+    "engine.io": "^1.0.5",
+    "access-control": "0.0.4"
+  }
+}

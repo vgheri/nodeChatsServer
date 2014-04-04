@@ -49,9 +49,18 @@ primus.save(__dirname + '/public/primus.js');
 
 primus.on('connection', function(spark) {
     console.info(spark.id + ' connected');
+    // message format:
+    // sender: name of the sender
+    // message: the content
+    // timestamp: timestamp of the message
     spark.on('data', function(data) {
-        if ('ping' === data) { 
-            spark.write('pong');
+        console.info(spark.id + ' just sent a message');
+        if (data.sender && data.message) {
+            primus.forEach(function (loopSpark, id, connections) {
+                if (id !== spark.id) {
+                    loopSpark.write(data);
+                }
+            });
         }
     });
 }).on('disconnection', function(spark) {

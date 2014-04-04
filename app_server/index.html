@@ -2,14 +2,38 @@
 <html>        
     <head>C'est GENIAL!</head>    
     <body>
+        <p>Enter your name</p>
+        <input type="text" id="name-input" placeholder="Enter your name here..." />
+        <div id="message-box" style="width: 300px; height: 300px; border: 1px solid;">            
+        </div>
+        <input type="text" id="message-input" placeholder="Enter message here..." />
+        <button id="send-message">Send</button>
         <script src="/public/primus.js"></script>
         <script>
             var primus = Primus.connect('http://localhost:3000');
-            primus.on('open', function() {
-                primus.write('ping');
+            primus.on('open', function() {                
                 primus.on('data', function(data) {
-                    console.log(data);
+                    var box = document.getElementById('message-box');
+                    box.innerHTML = box.innerHTML + '<p>' + data.sender + ' at ' + new Date(data.timestamp).toLocaleTimeString() + ' says: ' + data.message;
                 });
+            });
+            document.getElementById("send-message").addEventListener("click", function(evt) {
+                var name = document.getElementById("name-input").value;
+                var message = document.getElementById("message-input").value;
+                if (!name  || !message || name.length == 0 || message.length == 0)
+                {
+                    alert('Enter name and a message first!');
+                    return false;
+                }
+                evt.preventDefault();
+                var data = {};
+                data.sender = name;
+                data.message = message;
+                data.timestamp = new Date();
+                primus.write(data);
+                var box = document.getElementById('message-box');
+                box.innerHTML = box.innerHTML + '<p>' + data.sender + ' at ' + data.timestamp.toLocaleTimeString() + ' says: ' + data.message;
+                return true;
             });
         </script>
     </body>

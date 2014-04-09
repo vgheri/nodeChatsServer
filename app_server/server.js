@@ -54,10 +54,11 @@ primus.on('connection', function(spark) {
     // message: the content
     // timestamp: timestamp of the message
     spark.on('data', function(data) {
-        console.info(spark.id + ' just sent a message');
-        if (data.sender && data.message) {
-            primus.forEach(function (loopSpark, id, connections) {
+        console.info(spark.id + ' just sent a message');        
+        if (data.sender && data.content) {
+            primus.forEach(function (loopSpark, id, connections) {                
                 if (id !== spark.id) {
+                    //console.info('message broadcasted to: ' + id);
                     loopSpark.write(data);
                 }
             });

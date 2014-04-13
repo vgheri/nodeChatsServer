@@ -37,8 +37,9 @@ app.get('/', function(req, res) {
   fs.createReadStream(__dirname + '/index.html').pipe(res);
 });
 
-var server = http.createServer(app)
-
+var server = http.createServer(app);
+var messageHistory = [];
+var historySize = 10;
 // Primus configuration
 var primus = new Primus(server, {    
         transformer: 'engine.io',
@@ -49,12 +50,20 @@ primus.save(__dirname + '/public/primus.js');
 
 primus.on('connection', function(spark) {
     console.info(spark.id + ' connected');
+	// On connection we send the client the history of the server
+	spark.write(messageHistory);
     // message format:
     // sender: name of the sender
     // message: the content
     // timestamp: timestamp of the message
     spark.on('data', function(data) {
-        console.info(spark.id + ' just sent a message');        
+        console.info(spark.id + ' just sent a message');
+		// Add the message to the history 
+		if (messageHistory.length >= historySize) {
+			// If the history buffer is full, then remove the oldest message
+			messageHistory.splice(0, 1);
+		}
+		messageHistory.push(data);
         if (data.sender && data.content) {
             primus.forEach(function (loopSpark, id, connections) {                
                 if (id !== spark.id) {

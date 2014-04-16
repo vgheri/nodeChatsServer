@@ -8,7 +8,7 @@
 var express = require('express');
 var app = express();
 var fs = require('fs');
-var expressLogFile = fs.createWriteStream('./logs/express.log', {flags: 'a'});
+var expressLogFile = fs.createWriteStream('app_server/logs/express.log', {flags: 'a'});
 var Primus = require('primus');
 var http = require('http');
 
@@ -80,6 +80,11 @@ primus.on('connection', function(spark) {
 // Function that start the Primus server
 function start() {
     var port = process.env.PORT || 3000;
+    server.on('error', function(e) {
+        if (e.code == 'EADDRINUSE') {
+            console.log('ABORT: address in use.');            
+        }
+    });              
     server.listen(port, function() {
         console.info("Web and Primus server listening on port %d. Waiting for incoming connections...", port);
     });
